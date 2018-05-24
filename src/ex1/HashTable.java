@@ -68,12 +68,8 @@ public class HashTable {
         if(entries[hash] != null) {
             HashEntry temp = entries[hash];
 
-            while( !temp.key.equals(key) ) {
+            while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
                 temp = temp.next;
-                if (temp.key==null) { //System.out.println("No existe");//return null;
-
-                }
-            }
 
             return temp.value;
         }
