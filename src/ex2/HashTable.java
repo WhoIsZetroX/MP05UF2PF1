@@ -39,7 +39,7 @@ public class HashTable {
                 else if(temp.next != null)
                     temp = temp.next;
 
-            }while (temp.next != null);
+            }while (temp.next != null || temp.key.equals(key)); //ERROR: No actualizaba el ultimo, lo que hacia era añadir otro igual
 
             if(!found) {
                 temp.next = hashEntry;
@@ -47,16 +47,6 @@ public class HashTable {
                 this.size++;     //ERROR: faltaba incrementar el comptador
             }
         }
-        /*else {
-            HashEntry temp = entries[hash];
-            while(temp.next != null)
-                temp = temp.next;
-
-            temp.next = hashEntry;
-            hashEntry.prev = temp;
-            //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que aumente +1 al hacer put
-            size++;
-        }*/
 
     }
 
@@ -68,7 +58,8 @@ public class HashTable {
         if(entries[hash] != null) {
             HashEntry temp = entries[hash];
 
-            temp = getHashEntry(key, temp);
+            while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
+                temp = temp.next;
 
             //ERROR: Si encuentra un valor nulo no lo devuelve
             if (temp.key==key)
@@ -79,30 +70,44 @@ public class HashTable {
         return null;
     }
 
-    //REFACCIÓ: He aplicado la refactorización de extracción de metodo ya que se usaba en varios lugares por lo que lo he creido conveniente
-    private HashEntry getHashEntry(String key, HashEntry temp) {
-        while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
-            temp = temp.next;
-        return temp;
-    }
-
     public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
             HashEntry temp = entries[hash];
-            temp = getHashEntry(key, temp);
+            while( !temp.key.equals(key) && temp.next != null) //ERROR: Para que no siga al salir
+                temp = temp.next;
 
-            if (temp.key==key) {
+            if (temp.key!=key) return;
+            else{   //ERROR: No borraba bien en según que posición estuviese
 
-                if (temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+                //Borrar si es el primero
+                if (temp.prev==null) {
+                    //Borrar si es el primero
+                    entries[hash] = temp.next;             //esborrar element únic (no col·lissió)
+                }else if (temp.next==null){
+                    //Borrar si es el ultimo
+                    temp.prev.next=null;
+                }else {
+                    //Borrar si está en medio
+                    temp.prev.next = temp.next;
+                    temp.next.prev = temp.prev;
+                }
+                size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
+
+
+
+                /*if (temp.prev == null ) {
+                    entries[hash] = null;             //esborrar element únic (no col·lissió)
+                    size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
+                }
                 else {
                     if (temp.next != null)
                         temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
                     temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
-                }
-                size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
-            }else return;
+                }*/
+                //size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
+            }
         }
     }
 
@@ -156,8 +161,4 @@ public class HashTable {
         return hashTableStr.toString();
     }
 
-    //"REFACCIÓ": He tenido que cambiarlo de private a protected para que desde el main se pueda tener acceso
-    protected static void log(String msg) {
-        System.out.println(msg);
-    }
 }

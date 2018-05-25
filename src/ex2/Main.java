@@ -1,7 +1,10 @@
 package ex2;
 
 public class Main {
-    //REFACCIÓ: He aplicado la refactorización de extracción de clase ya que el main creo que debería estar a parte.
+
+    //REFACCIÓ: Extracción del main y el metodo log porque he considerado mejor dejar el main en otra clase a parte
+    // y el metodo log porque solo lo usa el main
+
     public static void main(String[] args) {
         HashTable hashTable = new HashTable();
         // Put some key values.
@@ -11,8 +14,13 @@ public class Main {
         }
 
         // Print the HashTable structure
-        HashTable.log("****   HashTable  ***");
-        HashTable.log(hashTable.toString());
-        HashTable.log("\nValue for key(20) : " + hashTable.get("20"));
+        log("****   HashTable  ***");
+        log(hashTable.toString());
+        log("\nValue for key(20) : " + hashTable.get("20"));
     }
+
+    private static void log(String msg) {
+        System.out.println(msg);
+    }
+
 }
