@@ -153,7 +153,7 @@ public class HashTable {
         return hashTableStr.toString();
     }
 
-    //TODO:
+    //"REFACCIÓ": He tenido que cambiarlo de private a protected para que desde el main se pueda tener acceso
     protected static void log(String msg) {
         System.out.println(msg);
     }
