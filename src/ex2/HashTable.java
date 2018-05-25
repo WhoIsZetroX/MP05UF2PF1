@@ -93,14 +93,17 @@ public class HashTable {
             HashEntry temp = entries[hash];
             temp = getHashEntry(key, temp);
 
-            if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
-            else{
-                if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
-                temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
-            }
+            if (temp.key==key) {
+
+                if (temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+                else {
+                    if (temp.next != null)
+                        temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
+                    temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
+                }
+                size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
+            }else return;
         }
-        //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
-        size--;
     }
 
     private int getHash(String key) {

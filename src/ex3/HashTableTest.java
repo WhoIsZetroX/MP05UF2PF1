@@ -64,25 +64,27 @@ class HashTableTest {
         //Creamos un objeto de la clase Hashtable
         HashTable hashTable = new HashTable();
         //Eliminamos la persona de la clave de la persona de antes
-        hashTable.drop("27");
-        hashTable.put("26","Brian");
-        hashTable.put("25","Raul");
+        hashTable.drop("a");
+        hashTable.put("b","Brian");
+        hashTable.put("c","Raul");
 
         //Comprobamos que en donde nos ha colocado la clave 27 está vacío
-        Assertions.assertNotNull(hashTable.get("25"));
-        Assertions.assertNotNull(hashTable.get("26"));
-        Assertions.assertNull(hashTable.get("27"));
+        Assertions.assertNotNull(hashTable.get("c"));
+        Assertions.assertNotNull(hashTable.get("b"));
+        Assertions.assertNull(hashTable.get("a"));
 
         //Comprobamos que en donde nos ha colocado la clave 27 ahora es null
-        Assertions.assertEquals(null, hashTable.get("27"));
-        Assertions.assertEquals("Raul", hashTable.get("25"));
-        Assertions.assertEquals("Brian", hashTable.get("26"));
+        Assertions.assertEquals(null, hashTable.get("a"));
+        Assertions.assertEquals("Raul", hashTable.get("c"));
+        Assertions.assertEquals("Brian", hashTable.get("b"));
 
-        hashTable.put("27","Brian");
-        hashTable.put("27","Raul");
-        hashTable.drop("27");
-        Assertions.assertNull(hashTable.get("27"));
-        Assertions.assertEquals(null, hashTable.get("27"));
+        hashTable.put("a","Brian");
+        hashTable.put("ab","Raul");
+        Assertions.assertEquals("\n bucket[0] = [a, Brian] -> [ab, Raul]\n bucket[1] = [b, Brian]\n bucket[2] = [c, Raul]", hashTable.toString());
+        hashTable.drop("a");
+        Assertions.assertEquals("\n bucket[0] = [ab, Raul]\n bucket[1] = [b, Brian]\n bucket[2] = [c, Raul]", hashTable.toString());
+        Assertions.assertNull(hashTable.get("a"));
+        Assertions.assertEquals(null, hashTable.get("a"));
     }
 
 }

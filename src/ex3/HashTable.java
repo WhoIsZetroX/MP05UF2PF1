@@ -19,42 +19,34 @@ public class HashTable {
         return this.INITIAL_SIZE;
     }
 
-    public void put(String key, String value) {
+    //MILLORA: Ahora debemos pasarle un object en vez de String
+    public void put(String key, Object value) {
         int hash = getHash(key);
         final HashEntry hashEntry = new HashEntry(key, value);
-        if(entries[hash] == null) {
+
+        if (entries[hash] == null) {
             entries[hash] = hashEntry;
             this.size++;
-        }
-        else {
-            INITIAL_SIZE = INITIAL_SIZE *2;
-            HashEntry[] entries2 = new HashEntry[INITIAL_SIZE];
-            for (int i = 0; i<entries2.length; i++){
-                System.out.println(entries[i].key+"-"+entries[i].value);
-                Item entry = new Item(entries[i].key, entries[i].value);
-                if (entry!=null){
-                    int new_index = getHash(entry.key);
-                    entries2[new_index].key = entry.key;
-                    entries2[new_index].value = entry.value;
-                }
+        } else {
+
+            HashEntry temp = entries[hash];
+            boolean found = false;
+            do {
+                if (temp.key == key) {
+                    temp.value = value;
+                    found = true;
+                    break;
+                } //else if (temp.key!=key){}
+                else if (temp.next != null)
+                    temp = temp.next;
+
+            } while (temp.next != null);
+
+            if (!found) {
+                temp.next = hashEntry;
+                hashEntry.prev = temp;
+                this.size++;     //ERROR: faltaba incrementar el comptador
             }
-            entries = entries2;
-            Item item = new Item(key, value);
-            putObj(item);
-
-        }
-    }
-
-    //MILLORA: He creado este nuevo metodo por si se le pasa un objeto que sepa detectarlo.
-     public void putObj(Item item) {
-        int hash = getHash(item.key);
-        final HashEntry hashEntry = new HashEntry(item.key, item.value);
-        if(entries[hash] == null) {
-            entries[hash] = hashEntry;
-            this.size++;
-        }
-        else {
-
         }
     }
 
@@ -62,7 +54,7 @@ public class HashTable {
     /**
      * Returns 'null' if the element is not found.
      */
-    public String get(String key) {
+    public Object get(String key) { //MILLORA: Ahora debemos hacer que nos devuelva un object en vez de String
         int hash = getHash(key);
         if(entries[hash] != null) {
             HashEntry temp = entries[hash];
@@ -78,7 +70,7 @@ public class HashTable {
     }
 
     private HashEntry getHashEntry(String key, HashEntry temp) {
-        while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
+        while( !temp.key.equals(key) && temp.next != null)
             temp = temp.next;
         return temp;
     }
@@ -90,13 +82,17 @@ public class HashTable {
             HashEntry temp = entries[hash];
             temp = getHashEntry(key, temp);
 
-            if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
-            else{
-                if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
-                temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
-            }
+            if (temp.key==key) {
+
+                if (temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+                else {
+                    if (temp.next != null)
+                        temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
+                    temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
+                }
+                size--;
+            }else return;
         }
-        size--;
     }
 
     private int getHash(String key) {
@@ -107,13 +103,16 @@ public class HashTable {
 
     private class HashEntry {
         String key;
-        String value;
+        //String value;
+        //MILLORA: He cambiado el String por Object
+        Object value;
 
         // Linked list of same hash entries.
         HashEntry next;
         HashEntry prev;
 
-        public HashEntry(String key, String value) {
+        //MILLORA: Ahora debemos pasarle un object en vez de String
+        public HashEntry(String key, Object value) {
             this.key = key;
             this.value = value;
             this.next = null;
@@ -149,7 +148,6 @@ public class HashTable {
         return hashTableStr.toString();
     }
 
-    //"REFACCIÓ": He tenido que cambiarlo de private a protected para que desde el main se pueda tener acceso
     protected static void log(String msg) {
         System.out.println(msg);
     }

@@ -39,7 +39,7 @@ public class HashTable {
                 else if(temp.next != null)
                     temp = temp.next;
 
-            }while (temp.next != null);
+            }while (temp.next != null || temp.key.equals(key)); //ERROR: No actualizaba el ultimo, lo que hacia era añadir otro igual
 
             if(!found) {
                 temp.next = hashEntry;
@@ -75,17 +75,40 @@ public class HashTable {
         if(entries[hash] != null) {
 
             HashEntry temp = entries[hash];
-            while( !temp.key.equals(key)&& temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
+            while( !temp.key.equals(key) && temp.next != null) //ERROR: Para que no siga al salir
                 temp = temp.next;
 
-            if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
-            else{
-                if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
-                temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
+            if (temp.key!=key) return;
+            else{   //ERROR: No borraba bien en según que posición estuviese
+
+                //Borrar si es el primero
+                if (temp.prev==null) {
+                    //Borrar si es el primero
+                    entries[hash] = temp.next;             //esborrar element únic (no col·lissió)
+                }else if (temp.next==null){
+                    //Borrar si es el ultimo
+                    temp.prev.next=null;
+                }else {
+                    //Borrar si está en medio
+                    temp.prev.next = temp.next;
+                    temp.next.prev = temp.prev;
+                }
+                size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
+
+
+
+                /*if (temp.prev == null ) {
+                    entries[hash] = null;             //esborrar element únic (no col·lissió)
+                    size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
+                }
+                else {
+                    if (temp.next != null)
+                        temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
+                    temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
+                }*/
+                //size--; //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
             }
         }
-        //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
-        size--;
     }
 
     private int getHash(String key) {
