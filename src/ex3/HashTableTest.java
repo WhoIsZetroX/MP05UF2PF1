@@ -1,8 +1,6 @@
-package ex1;
+package ex3;
 
 import org.junit.jupiter.api.Assertions;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class HashTableTest {
 
@@ -13,15 +11,15 @@ class HashTableTest {
         //Creamos un objeto de la clase Hashtable
         HashTable hashTable = new HashTable();
         //Añadimos un item a la hashtable
-        hashTable.put("27","Aleix");
+        hashTable.put("a","Aleix");
         //Comprobamos que en donde nos ha colocado la clave 27 no esté vacío
-        Assertions.assertNotNull(hashTable.get("27"));
+        Assertions.assertNotNull(hashTable.get("a"));
         //Comprobamos que en donde nos ha colocado la clave 27 está la persona que hemos creado
-        Assertions.assertEquals("Aleix", hashTable.get("27"));
+        Assertions.assertEquals("Aleix", hashTable.get("a"));
         Assertions.assertEquals(1, hashTable.size());
 
-        hashTable.put("27","Lala");
-        Assertions.assertEquals("Lala", hashTable.get("27"));
+        hashTable.put("a","Lala");
+        Assertions.assertEquals("Lala", hashTable.get("a"));
 
         //Despues de insertar algunos items lo que haremos será mirar el tamaño
         Assertions.assertEquals(1, hashTable.size());

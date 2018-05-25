@@ -1,7 +1,9 @@
-package ex1;
+package ex3;
 
 // Original source code: https://gist.github.com/amadamala/3cdd53cb5a6b1c1df540981ab0245479
 // Modified by Fernando Porrino Serrano for academic purposes.
+
+import javax.naming.InitialContext;
 
 public class HashTable {
     private int INITIAL_SIZE = 16;
@@ -22,33 +24,40 @@ public class HashTable {
         final HashEntry hashEntry = new HashEntry(key, value);
         if(entries[hash] == null) {
             entries[hash] = hashEntry;
-            //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que aumente +1 al hacer put
             this.size++;
         }
         else {
-            //ERROR: Al poner un item con la misma clave no se actualizaba si no que se añadía a ala siguiente posición
-            //ERROR: s'ha de comprovar si el ID es el mateix per actualitzar l'element existent
-            HashEntry temp = entries[hash];
-            boolean found = false;
-            do{
-                if(temp.key == key){
-                    temp.value = value;
-                    found = true;
-                    break;
+            INITIAL_SIZE = INITIAL_SIZE *2;
+            HashEntry[] entries2 = new HashEntry[INITIAL_SIZE];
+            for (int i = 0; i<entries2.length; i++){
+                System.out.println(entries[i].key+"-"+entries[i].value);
+                Item entry = new Item(entries[i].key, entries[i].value);
+                if (entry!=null){
+                    int new_index = getHash(entry.key);
+                    entries2[new_index].key = entry.key;
+                    entries2[new_index].value = entry.value;
                 }
-                else if(temp.next != null)
-                    temp = temp.next;
-
-            }while (temp.next != null);
-
-            if(!found) {
-                temp.next = hashEntry;
-                hashEntry.prev = temp;
-                this.size++;     //ERROR: faltaba incrementar el comptador
             }
-        }
+            entries = entries2;
+            Item item = new Item(key, value);
+            putObj(item);
 
+        }
     }
+
+    //MILLORA: He creado este nuevo metodo por si se le pasa un objeto que sepa detectarlo.
+     public void putObj(Item item) {
+        int hash = getHash(item.key);
+        final HashEntry hashEntry = new HashEntry(item.key, item.value);
+        if(entries[hash] == null) {
+            entries[hash] = hashEntry;
+            this.size++;
+        }
+        else {
+
+        }
+    }
+
 
     /**
      * Returns 'null' if the element is not found.
@@ -58,10 +67,8 @@ public class HashTable {
         if(entries[hash] != null) {
             HashEntry temp = entries[hash];
 
-            while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
-                temp = temp.next;
+            temp = getHashEntry(key, temp);
 
-            //ERROR: Si encuentra un valor nulo no lo devuelve
             if (temp.key==key)
                 return temp.value;
             else return null;
@@ -70,13 +77,18 @@ public class HashTable {
         return null;
     }
 
+    private HashEntry getHashEntry(String key, HashEntry temp) {
+        while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
+            temp = temp.next;
+        return temp;
+    }
+
     public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
             HashEntry temp = entries[hash];
-            while( !temp.key.equals(key)&& temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
-                temp = temp.next;
+            temp = getHashEntry(key, temp);
 
             if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
             else{
@@ -84,7 +96,6 @@ public class HashTable {
                 temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
             }
         }
-        //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que disminuya -1 al hacer drop
         size--;
     }
 
@@ -138,21 +149,8 @@ public class HashTable {
         return hashTableStr.toString();
     }
 
-    public static void main(String[] args) {
-        HashTable hashTable = new HashTable();
-        // Put some key values.
-        for(int i=0; i<30; i++) {
-            final String key = String.valueOf(i);
-            hashTable.put(key, key);
-        }
-
-        // Print the HashTable structure
-        log("****   HashTable  ***");
-        log(hashTable.toString());
-        log("\nValue for key(20) : " + hashTable.get("20") );
-    }
-
-    private static void log(String msg) {
+    //TODO:
+    protected static void log(String msg) {
         System.out.println(msg);
     }
 }

@@ -1,4 +1,4 @@
-package ex1;
+package ex2;
 
 // Original source code: https://gist.github.com/amadamala/3cdd53cb5a6b1c1df540981ab0245479
 // Modified by Fernando Porrino Serrano for academic purposes.
@@ -47,6 +47,16 @@ public class HashTable {
                 this.size++;     //ERROR: faltaba incrementar el comptador
             }
         }
+        /*else {
+            HashEntry temp = entries[hash];
+            while(temp.next != null)
+                temp = temp.next;
+
+            temp.next = hashEntry;
+            hashEntry.prev = temp;
+            //ERROR: La variable size nunca amuenta ni disminuye, para esto debemos hacer que aumente +1 al hacer put
+            size++;
+        }*/
 
     }
 
@@ -58,8 +68,7 @@ public class HashTable {
         if(entries[hash] != null) {
             HashEntry temp = entries[hash];
 
-            while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
-                temp = temp.next;
+            temp = getHashEntry(key, temp);
 
             //ERROR: Si encuentra un valor nulo no lo devuelve
             if (temp.key==key)
@@ -70,13 +79,19 @@ public class HashTable {
         return null;
     }
 
+    //REFACCIÓ: He aplicado la refactorización de extracción de metodo ya que se usaba en varios lugares por lo que lo he creido conveniente
+    private HashEntry getHashEntry(String key, HashEntry temp) {
+        while( !temp.key.equals(key) && temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
+            temp = temp.next;
+        return temp;
+    }
+
     public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
             HashEntry temp = entries[hash];
-            while( !temp.key.equals(key)&& temp.next != null) //ERROR: Si se encontraba una posición nula peta por lo que hay que decirle que si encuentra un valor nulo no siga
-                temp = temp.next;
+            temp = getHashEntry(key, temp);
 
             if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
             else{
@@ -138,21 +153,8 @@ public class HashTable {
         return hashTableStr.toString();
     }
 
-    public static void main(String[] args) {
-        HashTable hashTable = new HashTable();
-        // Put some key values.
-        for(int i=0; i<30; i++) {
-            final String key = String.valueOf(i);
-            hashTable.put(key, key);
-        }
-
-        // Print the HashTable structure
-        log("****   HashTable  ***");
-        log(hashTable.toString());
-        log("\nValue for key(20) : " + hashTable.get("20") );
-    }
-
-    private static void log(String msg) {
+    //TODO:
+    protected static void log(String msg) {
         System.out.println(msg);
     }
 }
