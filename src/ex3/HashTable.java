@@ -1,4 +1,4 @@
-package ex2;
+package ex3;
 
 // Original source code: https://gist.github.com/amadamala/3cdd53cb5a6b1c1df540981ab0245479
 // Modified by Fernando Porrino Serrano for academic purposes.
@@ -12,11 +12,13 @@ public class HashTable {
         return this.size;
     }
 
+    //TODO: Creo que es innecesario ya que si se quiere saber el tamaño se puede saber con lista.length
     public int real_size(){
         return this.INITIAL_SIZE;
     }
 
-    public void put(String key, String value) {
+    //TODO: Ahora se le pasa un value de tipo object
+    public void put(String key, Object value) { //    public void put(String key, String value) {
         int hash = getHash(key);
         final HashEntry hashEntry = new HashEntry(key, value);
         if(entries[hash] == null) {
@@ -24,7 +26,23 @@ public class HashTable {
             this.size++;
         }
         else {
-            HashEntry temp = entries[hash];
+            //TODO: DUPLICAMOS LA LISTA
+            INITIAL_SIZE = INITIAL_SIZE *2;
+            HashEntry[] entries2 = new HashEntry[INITIAL_SIZE];
+
+            for (int i=0; i<entries.length; i++){
+                HashEntry he = entries[i];
+                if (he!= null){
+                    int new_index = getHash(he.key);
+                    entries2[new_index]=he;
+                    if (he.key == key){
+                        he.value = value;
+                    }
+                }
+            }
+            entries = entries2;
+            //put(key, value);
+            /*HashEntry temp = entries[hash];
             boolean found = false;
             do{
                 if(temp.key == key){
@@ -41,7 +59,7 @@ public class HashTable {
                 temp.next = hashEntry;
                 hashEntry.prev = temp;
                 this.size++;
-            }
+            }*/
         }
 
     }
@@ -49,7 +67,7 @@ public class HashTable {
     /**
      * Returns 'null' if the element is not found.
      */
-    public String get(String key) {
+    public Object get(String key) {//public String get(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
@@ -105,13 +123,16 @@ public class HashTable {
 
     private class HashEntry {
         String key;
-        String value;
+        //TODO: comentado porque está cambiado a object
+        //String value;
+        Object value;
 
         // Linked list of same hash entries.
         HashEntry next;
         HashEntry prev;
 
-        public HashEntry(String key, String value) {
+        //TODO: Ahora el metodo se le pasa un object
+        public HashEntry(String key, Object value) { // public HashEntry(String key, String value) {
             this.key = key;
             this.value = value;
             this.next = null;
