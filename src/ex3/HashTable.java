@@ -3,6 +3,8 @@ package ex3;
 // Original source code: https://gist.github.com/amadamala/3cdd53cb5a6b1c1df540981ab0245479
 // Modified by Fernando Porrino Serrano for academic purposes.
 
+//Los cambios que se han hecho se pueden buscar más facilmente si se buscan las palabras: "CAMBIO" y "MILLORA"
+
 public class HashTable {
     private int INITIAL_SIZE = 16;
     private int size = 0;
@@ -12,12 +14,11 @@ public class HashTable {
         return this.size;
     }
 
-    //TODO: Creo que es innecesario ya que si se quiere saber el tamaño se puede saber con lista.length
     public int real_size(){
         return this.INITIAL_SIZE;
     }
 
-    //TODO: Ahora se le pasa un value de tipo object
+    //CAMBIO: Ahora se le pasa un value de tipo object
     public void put(String key, Object value) { //    public void put(String key, String value) {
         int hash = getHash(key);
         final HashEntry hashEntry = new HashEntry(key, value);
@@ -25,23 +26,29 @@ public class HashTable {
             entries[hash] = hashEntry;
             this.size++;
         }
-        else {
-            //TODO: DUPLICAMOS LA LISTA
-            INITIAL_SIZE = INITIAL_SIZE *2;
-            HashEntry[] entries2 = new HashEntry[INITIAL_SIZE];
+        else {//MILLORA: He hecho que ahora si hay colisión se duplique la tabla
+            // Si la key que queremos introducir ya existe actualizamos el valor
+            if (entries[hash].key == key){
+                entries[hash].value = value;
+            }else {// Si hay colision y no es la misma clave duplicamos la lista
+                INITIAL_SIZE = INITIAL_SIZE * 2;
+                HashEntry[] entries2 = new HashEntry[INITIAL_SIZE];
 
-            for (int i=0; i<entries.length; i++){
-                HashEntry he = entries[i];
-                if (he!= null){
-                    int new_index = getHash(he.key);
-                    entries2[new_index]=he;
-                    if (he.key == key){
-                        he.value = value;
+                if (entries[hash] == null)
+                    entries[hash] = hashEntry;
+
+                for (int i = 0; i < entries.length; i++) {
+                    HashEntry he = entries[i];
+                    if (he != null) {
+                        int new_index = getHash(he.key);
+                        entries2[new_index] = he;
+
                     }
                 }
+                entries = entries2;
+                put(key, value);
             }
-            entries = entries2;
-            //put(key, value);
+            //MILLORA: He hecho que ahora si hay colisión se duplique la tabla
             /*HashEntry temp = entries[hash];
             boolean found = false;
             do{
@@ -67,7 +74,7 @@ public class HashTable {
     /**
      * Returns 'null' if the element is not found.
      */
-    public Object get(String key) {//public String get(String key) {
+    public Object get(String key) {//CAMBIO: public String get(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
@@ -81,7 +88,6 @@ public class HashTable {
         return null;
     }
 
-    //REFACCIÓ: He hecho esta refactorización de método ya que se usaba en más de 1 método por lo que creí conveniente extraerlo.
     private HashEntry getHashEntry(String key, HashEntry entry) {
         HashEntry temp = entry;
         while( !temp.key.equals(key) && temp.next != null)
@@ -123,7 +129,7 @@ public class HashTable {
 
     private class HashEntry {
         String key;
-        //TODO: comentado porque está cambiado a object
+        //CAMBIO: comentado porque está cambiado a object
         //String value;
         Object value;
 
@@ -131,7 +137,7 @@ public class HashTable {
         HashEntry next;
         HashEntry prev;
 
-        //TODO: Ahora el metodo se le pasa un object
+        //CAMBIO: Ahora el metodo se le pasa un object
         public HashEntry(String key, Object value) { // public HashEntry(String key, String value) {
             this.key = key;
             this.value = value;

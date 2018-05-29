@@ -12,9 +12,12 @@ class HashTableTest {
         HashTable hashTable = new HashTable();
         //Miramos el tamaño
         Assertions.assertEquals(0, hashTable.size());
+        System.out.println(hashTable.real_size());
 
         //Añadimos un item a la hashtable
         hashTable.put("a","Aleix");
+        System.out.println(hashTable.real_size());
+
         //Miramos el tamaño
         Assertions.assertEquals(1, hashTable.size());
         //Comprobamos que en donde nos ha colocado la clave a no esté vacío
@@ -24,25 +27,30 @@ class HashTableTest {
         Assertions.assertEquals(1, hashTable.size());
 
         //Añadimos otro en el mismo sitio para ver si lo actualiza
-        hashTable.put("ab","Lala");
-        Assertions.assertEquals("Lala", hashTable.get("ab"));
+        hashTable.put("ab",45);
+        System.out.println(hashTable.real_size());
+        Assertions.assertEquals(45, hashTable.get("ab"));
 
         //Añadimos el 3r item
         hashTable.put("abb","KAKA");
+        System.out.println(hashTable.real_size());
         Assertions.assertEquals("KAKA", hashTable.get("abb"));
 
         //Actualizamos el 1r item
-        hashTable.put("a","KOKO");
-        Assertions.assertEquals("KOKO", hashTable.get("a"));
+        hashTable.put("a",true);
+        System.out.println(hashTable.real_size());
+        Assertions.assertEquals(true, hashTable.get("a"));
 
         //Actualizamos el 2o item
-        hashTable.put("ab","Lolo");
+        hashTable.put("ab",99.85f);
+        System.out.println(hashTable.real_size());
 
         //Actualizamos el 3r item
         hashTable.put("abb","BRIAN");
 
         //Despues de insertar algunos items lo que haremos será mirar el tamaño
         Assertions.assertEquals(3, hashTable.size());
+        System.out.println(hashTable.real_size());
         System.out.println(hashTable.toString());
 
     }
