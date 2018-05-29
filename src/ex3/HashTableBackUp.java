@@ -5,7 +5,7 @@ package ex3;
 
 //Los cambios que se han hecho se pueden buscar más facilmente si se buscan las palabras: "CAMBIO" y "MILLORA"
 
-public class HashTable {
+public class HashTableBackUp {
     private int INITIAL_SIZE = 16;
     private int size = 0;
     private HashEntry[] entries = new HashEntry[INITIAL_SIZE];
@@ -78,41 +78,28 @@ public class HashTable {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
-            //CAMBIO: comentamos el metodo que ya no hace falta usar
-            /*HashEntry temp = getHashEntry(key, entries[hash]);
+            HashEntry temp = getHashEntry(key, entries[hash]);
+
             if (temp.key==key)
                 return temp.value;
-            else return null;
-            */
-            if (entries[hash].key==key)
-                return entries[hash].value;
             else return null;
         }
 
         return null;
     }
 
-    //CAMBIO: Este metodo recorría la linked list pero ahora que ya no hay no hace falta que recorra nada
-    /*private HashEntry getHashEntry(String key, HashEntry entry) {
+    private HashEntry getHashEntry(String key, HashEntry entry) {
         HashEntry temp = entry;
         while( !temp.key.equals(key) && temp.next != null)
             temp = temp.next;
         return temp;
-    }*/
+    }
 
     public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
-            //CAMBIO: Ya no hay linked list por lo que no hay posiciones para borrar, borramos el unico elemento que hay y ya
-            if (entries[hash].key!=key) return;
-            else {
-                    //Borrar si es el primero
-                    entries[hash] = entries[hash].next;
-
-            }
-            //CAMBIO: Ya no hay linked list por lo que no hay posiciones para borrar, borramos el unico elemento que hay y ya
-            /*HashEntry temp = getHashEntry(key, entries[hash]);
+            HashEntry temp = getHashEntry(key, entries[hash]);
 
             if (temp.key!=key) return;
             else{
@@ -130,7 +117,7 @@ public class HashTable {
                     temp.next.prev = temp.prev;
                 }
                 size--;
-            }*/
+            }
         }
     }
 

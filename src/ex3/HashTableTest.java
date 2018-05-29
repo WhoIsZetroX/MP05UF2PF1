@@ -121,7 +121,7 @@ class HashTableTest {
 
         //Borramos el ultimo y comprobamos
         hashTable.drop("abb");
-        System.out.println("Borramos el ultimo\n"+hashTable.toString());
+        System.out.println("\nBorramos abb"+hashTable.toString());
 
         //Lo volvemos a meter
         hashTable.put("abb","Aleix");
@@ -129,7 +129,7 @@ class HashTableTest {
 
         //Borramos el del medio y comprobamos
         hashTable.drop("ab");
-        System.out.println("Borramos el del medio\n"+hashTable.toString());
+        System.out.println("\nBorramos el ab"+hashTable.toString());
 
         //Lo volvemos a meter
         hashTable.put("ab","Raul");
@@ -137,7 +137,7 @@ class HashTableTest {
 
         //Borramos el primero y comprobamos
         hashTable.drop("a");
-        System.out.println("Borramos el primero\n"+hashTable.toString());
+        System.out.println("\nBorramos a"+hashTable.toString());
 
         //Assertions.assertEquals("\n bucket[0] = [a, Brian] -> [ab, Raul]\n bucket[1] = [b, Brian]\n bucket[2] = [c, Raul]", hashTable.toString());
 //Borrar primero:        Assertions.assertEquals("\n bucket[0] = [ab, Raul] -> [abb, Aleix]\n bucket[1] = [b, Brian]\n bucket[2] = [c, Raul]", hashTable.toString());

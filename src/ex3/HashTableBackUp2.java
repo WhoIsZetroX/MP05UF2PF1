@@ -5,7 +5,7 @@ package ex3;
 
 //Los cambios que se han hecho se pueden buscar más facilmente si se buscan las palabras: "CAMBIO" y "MILLORA"
 
-public class HashTable {
+public class HashTableBackUp2 {
     private int INITIAL_SIZE = 16;
     private int size = 0;
     private HashEntry[] entries = new HashEntry[INITIAL_SIZE];
