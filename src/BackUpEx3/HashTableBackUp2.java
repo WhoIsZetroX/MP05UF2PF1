@@ -1,11 +1,11 @@
-package ex3;
+package BackUpEx3;
 
 // Original source code: https://gist.github.com/amadamala/3cdd53cb5a6b1c1df540981ab0245479
 // Modified by Fernando Porrino Serrano for academic purposes.
 
 //Los cambios que se han hecho se pueden buscar más facilmente si se buscan las palabras: "CAMBIO" y "MILLORA"
 
-public class HashTable {
+public class HashTableBackUp2 {
     private int INITIAL_SIZE = 16;
     private int size = 0;
     private HashEntry[] entries = new HashEntry[INITIAL_SIZE];
@@ -107,8 +107,9 @@ public class HashTable {
             //CAMBIO: Ya no hay linked list por lo que no hay posiciones para borrar, borramos el unico elemento que hay y ya
             if (entries[hash].key!=key) return;
             else {
-                entries[hash] = null;
-                size--;
+                    //Borrar si es el primero
+                    entries[hash] = entries[hash].next;
+
             }
             //CAMBIO: Ya no hay linked list por lo que no hay posiciones para borrar, borramos el unico elemento que hay y ya
             /*HashEntry temp = getHashEntry(key, entries[hash]);
@@ -145,18 +146,16 @@ public class HashTable {
         //String value;
         Object value;
 
-        //CAMBIO: Como ya no hya linked list no nos hace falta el next ni el prev
         // Linked list of same hash entries.
-        /*HashEntry next;
-        HashEntry prev;*/
+        HashEntry next;
+        HashEntry prev;
 
         //CAMBIO: Ahora el metodo se le pasa un object
         public HashEntry(String key, Object value) { // public HashEntry(String key, String value) {
             this.key = key;
             this.value = value;
-            //CAMBIO: Como ya no hya linked list no nos hace falta el next ni el prev
-            /*this.next = null;
-            this.prev = null;*/
+            this.next = null;
+            this.prev = null;
         }
 
         @Override
@@ -178,13 +177,12 @@ public class HashTable {
                     .append("] = ")
                     .append(entry.toString());
             bucket++;
-            //CAMBIO: Ya no hace falta este "while" porque ya no hay más de un elemento en la misma posición
-            /*HashEntry temp = entry.next;
+            HashEntry temp = entry.next;
             while(temp != null) {
                 hashTableStr.append(" -> ");
                 hashTableStr.append(temp.toString());
                 temp = temp.next;
-            }*/
+            }
         }
         return hashTableStr.toString();
     }
