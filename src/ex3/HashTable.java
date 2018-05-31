@@ -177,12 +177,13 @@ public class HashTable {
                     .append("] = ")
                     .append(entry.toString());
             bucket++;
-            HashEntry temp = entry.next;
+            //CAMBIO: Ya no hace falta este "while" porque ya no hay más de un elemento en la misma posición
+            /*HashEntry temp = entry.next;
             while(temp != null) {
                 hashTableStr.append(" -> ");
                 hashTableStr.append(temp.toString());
                 temp = temp.next;
-            }
+            }*/
         }
         return hashTableStr.toString();
     }
